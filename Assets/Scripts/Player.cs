@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
     private Rigidbody2D rb;
     private bool isGrounded = true;
+    public PlayerAnimator playerAnimator;
 
     void Start()
     {
@@ -16,16 +17,34 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Move();
+        float x = Input.GetAxis("Horizontal");
+
+        // Verifica se o personagem está se movendo
+        if (x != 0)
+        {
+            Move(x);
+            playerAnimator.PlayAnimation("Run"); // Ativa animação de corrida
+        }
+        else if (isGrounded)
+        {
+            playerAnimator.PlayAnimation("Player_idle"); // Ativa animação de parado
+        }
+
+        // Verifica se o personagem deve pular
         if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
         {
             Jump();
         }
+
+        // Verifica se o personagem está caindo
+        if (!isGrounded && rb.velocity.y < 0)
+        {
+            playerAnimator.PlayAnimation("Fall"); // Ativa animação de queda
+        }
     }
 
-    void Move()
+    void Move(float x)
     {
-        float x = Input.GetAxis("Horizontal");
         Vector2 movement = new Vector2(x * moveSpeed, rb.velocity.y);
         rb.velocity = movement;
     }
@@ -34,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
         isGrounded = false;
+        playerAnimator.PlayAnimation("Jump"); // Ativa animação de pulo
     }
 
     void OnCollisionEnter2D(Collision2D collision)
