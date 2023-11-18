@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
         }
         else if (isGrounded)
         {
-            playerAnimator.PlayAnimation("Player_idle"); // Ativa animação de parado
+            ;// playerAnimator.PlayAnimation("Player_idle"); // Ativa animação de parado
         }
 
         // Verifica se o personagem deve pular
