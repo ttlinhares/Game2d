@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
         }
         if (moveX < 0f)
         {
-            animator.SetBool("Walk", true);
+           // animator.SetBool("Run", true);
             spriterend.flipX = true;
         }
         if (moveX == 0f)
@@ -58,11 +58,11 @@ public class Player : MonoBehaviour
         if (flip < 0f)
         {
             spriterend.flipX = true;
-            animator.SetBool("Walk", true);
+        //    animator.SetBool("Run", true);
 
         } else if (flip > 0f)
         {
-            animator.SetBool("Walk", true);
+         //   animator.SetBool("Run", true);
             spriterend.flipX = false;
         }
         if (flip == 0f)
