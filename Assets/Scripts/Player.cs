@@ -87,6 +87,20 @@ public class Player : MonoBehaviour
             animator.SetBool("Idle", true);
             animator.SetBool("Jump", false);
         }
+
+        if (collision.gameObject.CompareTag("espetos")) ;
+        {
+            GameController.instance.ShowGameOver();
+            Destroy(gameObject);
+        }
+
+        if (collision.gameObject.CompareTag("Armadillhas")) ;
+        {
+            GameController.instance.ShowGameOver();
+            Destroy(gameObject);
+        }
+
+       
     }
 
     void OnCollisionExit2D(Collision2D collision)

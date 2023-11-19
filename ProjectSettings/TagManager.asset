@@ -7,6 +7,9 @@ TagManager:
   - Ground
   - Bricks
   - Abismo
+  - espetos
+  - Armadillhas
+  - gameOverPainel
   layers:
   - Default
   - TransparentFX
