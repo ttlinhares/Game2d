@@ -9,7 +9,7 @@ public class Passaro : MonoBehaviour
 
     // Start is called before the first frame update
 
-    public float speed = 4f;
+    public float speed = 2f;
     private bool dirRight = true;
     private float timer;
     private GameObject gameobj;
@@ -52,11 +52,11 @@ public class Passaro : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Destroy(gameObject);
-            RestartGame();
-        }
+//        if (collision.gameObject.CompareTag("Player"))
+  //      {
+    //        Destroy(gameObject);
+      //      RestartGame();
+        //}
     }
     void RestartGame()
     {

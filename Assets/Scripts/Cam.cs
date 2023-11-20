@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class Cam : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Transform target; 
+    public float smoothSpeed = 0.125f; 
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        
+        if (target != null)
+        {
+            // Obtém a posição atual da câmera
+            Vector3 currentPosition = transform.position;
+
+            
+            float newYPosition = Mathf.Lerp(currentPosition.y, target.position.y, smoothSpeed);
+
+            
+            transform.position = new Vector3(currentPosition.x, newYPosition, currentPosition.z);
+        }
     }
 }

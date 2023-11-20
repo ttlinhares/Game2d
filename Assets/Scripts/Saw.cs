@@ -39,14 +39,6 @@ public class Saw : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Destroy(gameObject);
-            RestartGame();
-        }
-    }
     void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

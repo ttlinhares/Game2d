@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -8,6 +9,7 @@ public class Player : MonoBehaviour
     private bool isGrounded;
     private Animator animator;
     private SpriteRenderer spriterend;
+    private Vector2 checkpointPosition;
 
     // Inicialização
     void Start()
@@ -15,67 +17,83 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriterend = GetComponent<SpriteRenderer>();
+
+        Debug.Log(checkpointPosition.ToString());
+        checkpointPosition = gameObject.transform.position;
     }
 
     // Atualização a cada frame
     void Update()
     {
         MovePlayer();
-        if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
-        {
-            Jump();
-        }
-        UpdateAnim();
+        Jump();
     }
 
     // Método para movimentar o jogador
     void MovePlayer()
     {
         float moveX = Input.GetAxis("Horizontal");
+        
         rb.velocity = new Vector2(moveX * moveSpeed, rb.velocity.y);
-        Flip(moveX);
 
-        if(moveX > 0f)
-        {
-            spriterend.flipX = false;
 
-        }
-        if (moveX < 0f)
+        if(Input.GetAxis("Horizontal") < 0f)
         {
-           // animator.SetBool("Run", true);
+            animator.SetBool("Run", true);
             spriterend.flipX = true;
         }
-        if (moveX == 0f)
+        if (Input.GetAxis("Horizontal") > 0f)
         {
-            animator.SetBool("Idle", true);
-        }
-
-    }
-    // Método para flip
-
-    void Flip(float flip)
-    {
-        if (flip < 0f)
-        {
-            spriterend.flipX = true;
-        //    animator.SetBool("Run", true);
-
-        } else if (flip > 0f)
-        {
-         //   animator.SetBool("Run", true);
             spriterend.flipX = false;
+            animator.SetBool("Run", true);
         }
-        if (flip == 0f)
+        if (Input.GetAxis("Horizontal") == 0f)
+
         {
-            animator.SetBool("Idle", true);
+            animator.SetBool("Run", false);
         }
+
+
     }
 
     // Método para pular
     void Jump()
     {
-        rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-        animator.SetBool("Jump", true);
+        if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
+        {
+            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            Debug.Log(rb.velocity.y.ToString());
+
+            if (rb.velocity.y < 0f && isGrounded)
+            {
+                Debug.Log("O jogador está caindo");
+                animator.SetBool("Fall", true);
+              
+            }
+            else if (rb.velocity.y > 0f)
+            {
+                Debug.Log("O jogador está pulando");
+                animator.SetBool("Jump", true);
+               
+            }
+            else
+            {
+                animator.SetBool("Jump", false);
+                animator.SetBool("Fall", false);
+
+            }
+
+            if(!isGrounded)
+            {
+                if(rb.velocity.y < 0f)
+                {
+                    animator.SetBool("Fall", true);
+                }
+            }
+
+        }
+        
+
     }
 
     // Verificar se o jogador está no chão
@@ -84,44 +102,69 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
-            animator.SetBool("Idle", true);
             animator.SetBool("Jump", false);
+            animator.SetBool("Fall", false);
         }
 
-        if (collision.gameObject.CompareTag("espetos")) ;
+        if (collision.gameObject.CompareTag("espetos"))
         {
             GameController.instance.ShowGameOver();
+            Dead();
+        }
+
+        if (collision.gameObject.CompareTag("Armadillhas"))
+        {
+            Debug.Log("Colidiu com armadilha!");
+            Dead();
+        }
+        if (collision.gameObject.CompareTag("armadilhacena2"))
+        {
+            Debug.Log("Colidiu com armadilha!");
+            Dead();
+        }
+        if (collision.gameObject.CompareTag("Finish"))
+        {
+            GameController.instance.ProximaFase();
             Destroy(gameObject);
         }
 
-        if (collision.gameObject.CompareTag("Armadillhas")) ;
-        {
-            GameController.instance.ShowGameOver();
-            Destroy(gameObject);
-        }
 
-       
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("checkpoint"))
+        {
+            // Armazene a posição do jogador.
+            checkpointPosition = gameObject.transform.position;
+            Debug.Log("Ckeckpoint!" + checkpointPosition.ToString());
+        }
     }
 
     void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isGrounded = false;
+            isGrounded = false;          
             
         }
     }
 
-    void UpdateAnim()
+
+
+    public void Dead()
     {
-        if (!isGrounded && rb.velocity.y < 0)
+        if (checkpointPosition != null)
         {
-            animator.SetBool("Fall", true);
-            animator.SetBool("Jump", false);
-        }
-        else
+            gameObject.transform.position = checkpointPosition;
+            FindObjectOfType<TentativasController>().Incretentativas();
+            Debug.Log("Caiu no true!");
+
+        } else
         {
-            animator.SetBool("Fall", false);
+            Debug.Log("Caiu no else!");
+            FindObjectOfType<TentativasController>().Incretentativas();
+            GameController.instance.ShowGameOver();
+            //Destroy(gameObject);
         }
     }
 }

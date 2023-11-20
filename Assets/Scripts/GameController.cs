@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
 
    public void ShowGameOver()
     {
-        gameOverPainel.SetActive(true);
+        SceneManager.LoadScene("GameOver");
     }
 
     public void fimDeJogo()
@@ -28,9 +28,9 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene("cenajogo");
     }
 
-    public void proximaFase()
+    public void ProximaFase()
     {
-        SceneManager.LoadScene("cenajogo 1");
+        SceneManager.LoadScene("cenajogo1");
     }
 
     
