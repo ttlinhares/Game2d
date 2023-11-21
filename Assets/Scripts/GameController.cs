@@ -5,34 +5,57 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    public GameObject gameOverPainel;
     public static GameController instance;
+    public static GameObject gameOverPainel;
+    
+
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
-        instance = this;
+        gameOverPainel = GameObject.Find("gameOverPainel");
     }
 
-   public void ShowGameOver()
+    public void ShowGameOver()
     {
-        SceneManager.LoadScene("GameOver");
+        
+        gameOverPainel.SetActive(true);
+        
+       
     }
 
-    public void fimDeJogo()
-    {
-
-    }
-   
     public void Restargame()
     {
-        SceneManager.LoadScene("cenajogo");
+        if (SceneManager.GetSceneByName("cenajogo") != null)
+        {
+            SceneManager.LoadScene("cenajogo");
+        }
+        else
+        {
+            Debug.LogError("A cena 'cenajogo' não está na build.");
+        }
     }
 
     public void ProximaFase()
     {
-        SceneManager.LoadScene("cenajogo1");
+        if (SceneManager.GetSceneByName("cenajogo1") != null)
+        {
+            SceneManager.LoadScene("cenajogo1");
+        }
+        else
+        {
+            Debug.LogError("A cena 'cenajogo1' não está na build.");
+        }
     }
-
-    
-    
 }
