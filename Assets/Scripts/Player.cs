@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -11,9 +12,12 @@ public class Player : MonoBehaviour
     private SpriteRenderer spriterend;
     private Vector2 checkpointPosition;
 
+
     // Inicialização
     void Start()
     {
+        
+
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriterend = GetComponent<SpriteRenderer>();
@@ -33,11 +37,11 @@ public class Player : MonoBehaviour
     void MovePlayer()
     {
         float moveX = Input.GetAxis("Horizontal");
-        
+
         rb.velocity = new Vector2(moveX * moveSpeed, rb.velocity.y);
 
 
-        if(Input.GetAxis("Horizontal") < 0f)
+        if (Input.GetAxis("Horizontal") < 0f)
         {
             animator.SetBool("Run", true);
             spriterend.flipX = true;
@@ -68,13 +72,13 @@ public class Player : MonoBehaviour
             {
                 Debug.Log("O jogador está caindo");
                 animator.SetBool("Fall", true);
-              
+
             }
             else if (rb.velocity.y > 0f)
             {
                 Debug.Log("O jogador está pulando");
                 animator.SetBool("Jump", true);
-               
+
             }
             else
             {
@@ -83,16 +87,16 @@ public class Player : MonoBehaviour
 
             }
 
-            if(!isGrounded)
+            if (!isGrounded)
             {
-                if(rb.velocity.y < 0f)
+                if (rb.velocity.y < 0f)
                 {
                     animator.SetBool("Fall", true);
                 }
             }
 
         }
-        
+
 
     }
 
@@ -134,9 +138,14 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("checkpoint"))
         {
-            // Armazene a posição do jogador.
             checkpointPosition = gameObject.transform.position;
             Debug.Log("Ckeckpoint!" + checkpointPosition.ToString());
+        }
+        if (collision.gameObject.CompareTag("chegada"))
+        {
+
+            SceneManager.LoadScene("fim");
+            Destroy(gameObject);
         }
     }
 
@@ -156,14 +165,15 @@ public class Player : MonoBehaviour
         if (checkpointPosition != null)
         {
             gameObject.transform.position = checkpointPosition;
-            FindObjectOfType<TentativasController>().Incretentativas();
+
+    
             Debug.Log("Caiu no true!");
 
         } else
         {
             Debug.Log("Caiu no else!");
-            FindObjectOfType<TentativasController>().Incretentativas();
-            GameController.instance.ShowGameOver();
+
+            gameObject.transform.position = checkpointPosition;
             //Destroy(gameObject);
         }
     }
