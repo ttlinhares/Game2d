@@ -13,20 +13,30 @@ public class Player : MonoBehaviour
     private Vector2 checkpointPosition;
 
 
+<<<<<<< HEAD
     // Inicialização
     void Start()
+=======
+
+    private void Awake()
+>>>>>>> e18f1076a122b45c2677c48ef35ec0e698d9f62f
     {
         
 
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriterend = GetComponent<SpriteRenderer>();
-
-        Debug.Log(checkpointPosition.ToString());
         checkpointPosition = gameObject.transform.position;
     }
+    void Start()
+    {
+        
 
-    // Atualização a cada frame
+        Debug.Log(checkpointPosition.ToString());
+        
+    }
+
+    
     void Update()
     {
         MovePlayer();
@@ -118,15 +128,17 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Armadillhas"))
         {
+            GameController.instance.ShowGameOver();
             Debug.Log("Colidiu com armadilha!");
             Dead();
         }
         if (collision.gameObject.CompareTag("armadilhacena2"))
         {
+            GameController.instance.ShowGameOver();
             Debug.Log("Colidiu com armadilha!");
             Dead();
         }
-        if (collision.gameObject.CompareTag("Finish"))
+        if (collision.gameObject.CompareTag("chegada"))
         {
             GameController.instance.ProximaFase();
             Destroy(gameObject);
